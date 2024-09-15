@@ -1,10 +1,8 @@
 import logging
 import time
 import random
+from log_utils import MakeFileHandler
 
-from logging.handlers import RotatingFileHandler
-
-logging.basicConfig(format="%(asctime)s %(message)s", filename='log/example.log', encoding='utf-8', level=logging.DEBUG)
 
 logger = logging.getLogger(__name__)
 handler = logging.StreamHandler()
@@ -12,7 +10,7 @@ formatter = logging.Formatter(
     '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
 handler.setFormatter(formatter)
 
-file_handler = RotatingFileHandler(filename="log/rotate.log", maxBytes=1024*1024, backupCount=3, encoding='utf-8')
+file_handler = MakeFileHandler(filename="log/rotate.log", maxBytes=1024 * 1024, backupCount=3, encoding='utf-8')
 file_handler.setFormatter(formatter)
 
 logger.addHandler(handler)
