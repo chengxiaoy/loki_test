@@ -10,10 +10,30 @@ global:
 # Here it's Prometheus itself.
 scrape_configs:
   # The job name is added as a label `job=<job_name>` to any timeseries scraped from this config.
-  - job_name: 'prometheus'
+  - job_name: "server"
 
     # Override the global default and scrape targets from this job every 5 seconds.
     scrape_interval: 5s
 
     static_configs:
       - targets: ['host.docker.internal:8007']
+
+  - job_name: "docker"
+    # metrics_path defaults to '/metrics'
+    # scheme defaults to 'http'.
+
+    static_configs:
+      - targets: [ "host.docker.internal:9323" ]
+
+  - job_name: "docker-containers"
+    docker_sd_configs:
+      - host: tcp://host.docker.internal:2375 # You can also use http/https to connect to the Docker daemon.
+    relabel_configs:
+      # Only keep containers that have a `prometheus-job` label.
+      - source_labels: [ __meta_docker_container_label_prometheus_job ]
+        regex: .+
+        action: keep
+      # Use the task labels that are prefixed by `prometheus-`.
+      - regex: __meta_docker_container_label_prometheus_(.+)
+        action: labelmap
+        replacement: $1

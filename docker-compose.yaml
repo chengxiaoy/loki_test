@@ -13,6 +13,8 @@ services:
     command: -config.file=/mnt/config/loki-config.yaml
     networks:
       - loki
+    labels:
+      - "prometheus_job=loki"
 
   promtail:
     image: grafana/promtail:3.0.0
@@ -24,6 +26,8 @@ services:
     command: -config.file=/mnt/config/promtail-config.yaml
     networks:
       - loki
+    labels:
+      - "prometheus_job=promtail"
 
   grafana:
     environment:
