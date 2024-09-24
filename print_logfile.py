@@ -1,21 +1,11 @@
 import logging
 import time
 import random
-from log_utils import MakeFileHandler
+from log_utils import load_log_config
+
+load_log_config()
 
 logger = logging.getLogger(__name__)
-handler = logging.StreamHandler()
-formatter = logging.Formatter(
-    '%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-handler.setFormatter(formatter)
-
-file_handler = MakeFileHandler(filename="log/rotate.log", maxBytes=1024 * 1024, backupCount=3, encoding='utf-8')
-file_handler.setFormatter(formatter)
-
-logger.addHandler(handler)
-logger.addHandler(file_handler)
-
-logger.setLevel(logging.DEBUG)
 
 
 def raise_exception_method():
@@ -26,7 +16,9 @@ def raise_exception_method():
 
 
 def log():
+    random_int = random.Random().randint(1, 10)
     logger.debug('This message should go to the log file')
+    logger.debug(f'test f-str {random_int}')
     logger.debug('This message should go to \n the log file')
     logger.info('So should this')
     logger.info('So \n should \n this')
@@ -35,7 +27,8 @@ def log():
     try:
         raise_exception_method()
     except Exception as e:
-        logger.exception(e)
+        logger.exception(f"Exception: an error occur: {e}")
+        logger.exception(f"Error: an error occur: {e}")
 
 
 if __name__ == '__main__':

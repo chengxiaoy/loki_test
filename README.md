@@ -26,3 +26,4 @@ To enable docker engine tcp port on Mac Docker Desktop for prometheus scrape
 ## TODO
 - Authentication
 - Data Persistence
+- ruler in loki and integrate with grafana
